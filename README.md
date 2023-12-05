@@ -1,5 +1,8 @@
 # Few Shot Benchmark for Biomedical Datasets
 
+## TODOs and Ideas
+* Only train the feature extractor with T in front (don't add the classifier), such that the training forces T to improve the probability distribution it assigns. Construct a custom loss that looks at W=T(V) and assigns for example w_ij close to 1 if v_i, v_j are from the same class, and w_ij = 0 if v_i, v_j are from different classes. The idea is to exclusively help T distinguish between classes, thus forcing the feature extractor to extract only information on this. The hypothesis is that, not having the classifier means that the model will better learn to differentiate classes, but it will be weaker at determining the class label of a given sample.
+
 
 ## Installation
 
