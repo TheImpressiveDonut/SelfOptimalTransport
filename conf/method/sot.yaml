@@ -1,0 +1,7 @@
+defaults:
+  - meta_base
+
+name: sot
+
+cls:
+  _target_: methods.sot.SelfOptimalTransport
