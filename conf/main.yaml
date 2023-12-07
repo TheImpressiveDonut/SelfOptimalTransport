@@ -28,8 +28,8 @@ checkpoint:
   time: latest
 
 wandb:
-  project: ???
-  entity: ???
-  mode: "online" # Can set to offline, disabled
+  project: "sot"
+  entity: "self-optimal"
+  mode: "disabled" # Can set to offline, disabled
 
 iter_num: 600

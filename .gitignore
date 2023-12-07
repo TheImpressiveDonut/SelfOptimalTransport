@@ -2,5 +2,9 @@ data/
 outputs/
 __pycache__/
 
+wandb/
+checkpoints/
+.idea/
+
 # Mac related files
 .DS_Store
