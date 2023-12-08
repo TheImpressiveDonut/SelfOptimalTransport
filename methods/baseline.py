@@ -79,7 +79,7 @@ class Baseline(MetaTemplate):
                                                                         avg_loss / float(i + 1)))
                 wandb.log({"loss/train": avg_loss / float(i + 1)})
 
-    def test_loop(self, test_loader, return_std=None):  # overwrite parrent function
+    def test_loop(self, test_loader, record=None, return_std=None):  # overwrite parrent function
         correct = 0
         count = 0
         acc_all = []
