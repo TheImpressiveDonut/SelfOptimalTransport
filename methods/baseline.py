@@ -129,6 +129,8 @@ class Baseline(MetaTemplate):
             # y_support = y_support.contiguous().view(self.n_way * y.size(1), -1)
 
         print(f'feat_dime: {self.feat_dim}')
+        print(f'z_query: {z_query.size()}')
+        print(f'z_support: {z_support.size()}')
 
         if self.loss_type == 'softmax':
             linear_clf = nn.Linear(self.feat_dim, self.n_way)
