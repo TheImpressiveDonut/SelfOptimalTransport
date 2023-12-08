@@ -52,7 +52,7 @@ class SPSimpleDataset(SPDataset):
         return self.samples[0].input_seq.shape[0]
 
     def get_data_loader(self) -> DataLoader:
-        data_loader_params = dict(batch_size=self.batch_size, shuffle=True, num_workers=4, pin_memory=True)
+        data_loader_params = dict(batch_size=self.batch_size, shuffle=True, num_workers=2, pin_memory=True)
         data_loader = torch.utils.data.DataLoader(self, **data_loader_params)
 
         return data_loader
@@ -98,7 +98,7 @@ class SPSetDataset(SPDataset):
 
     def get_data_loader(self) -> DataLoader:
         sampler = EpisodicBatchSampler(len(self), self.n_way, self.n_episode)
-        data_loader_params = dict(batch_sampler=sampler, num_workers=4, pin_memory=True)
+        data_loader_params = dict(batch_sampler=sampler, num_workers=2, pin_memory=True)
         data_loader = torch.utils.data.DataLoader(self, **data_loader_params)
         return data_loader
 
