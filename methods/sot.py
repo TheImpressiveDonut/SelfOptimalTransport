@@ -23,6 +23,7 @@ class Sot(nn.Module):
         # Compute Sinkhorn
         sum_row_constraint = torch.ones_like(D)  # @todo check if need vector or matrix
         sum_col_constraint = torch.ones_like(D)
+        print(f'D size: {D.size()}')
         W = ot.sinkhorn(sum_row_constraint, sum_col_constraint, D, 1 / self.lambda_, numItermax=self.n_iter)
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
         W.fill_diagonal_(1)
