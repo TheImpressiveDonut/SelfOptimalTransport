@@ -39,8 +39,19 @@ def initialize_dataset_model(cfg):
     sot = None
     if cfg.sot:
         # final dim of the Sot layer is the batch size
-        batch_size =
-        sot = Sot(final_feat_dim=batch_size)
+        if cfg.method.type == "baseline":
+            train_batch_size = cfg.method.train_batch
+        else:
+            train_batch_size = cfg.cls.n_support + cfg.cls.n_query
+
+        if cfg.method.eval_type == 'simple':
+            val_batch_size = cfg.method.val_batch
+        else:
+            val_batch_size = cfg.cls.n_support + cfg.cls.n_query
+
+        assert train_batch_size == val_batch_size
+
+        sot = Sot(final_feat_dim=train_batch_size)
 
     # Instantiate few-shot method class
     model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
