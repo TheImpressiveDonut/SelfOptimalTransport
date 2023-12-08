@@ -10,9 +10,9 @@ from methods.meta_template import MetaTemplate
 
 class Baseline(MetaTemplate):
 
-    def __init__(self, backbone, n_way, n_support, n_classes=1, loss='softmax', type='classification'):
-        super(Baseline, self).__init__(backbone, n_way, n_support, change_way=True)
-        self.feature = backbone
+    def __init__(self, backbone, n_way, n_support, n_classes=1, loss='softmax', type='classification', sot=None):
+        super(Baseline, self).__init__(backbone, n_way, n_support, change_way=True, sot=sot)
+        # self.feature = backbone
         self.type = type
         self.n_classes = n_classes
 

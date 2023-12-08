@@ -10,12 +10,15 @@ from utils.data_utils import pearson_corr
 
 
 class MetaTemplate(nn.Module):
-    def __init__(self, backbone, n_way, n_support, change_way=True):
+    def __init__(self, backbone, n_way, n_support, change_way=True, sot=None):
         super(MetaTemplate, self).__init__()
         self.n_way = n_way
         self.n_support = n_support
         self.n_query = -1  # (change depends on input)
         self.feature = backbone
+        if sot is not None:
+            self.feature = nn.Sequential(backbone, sot)
+            self.feature.final_feat_dim = sot.final_feat_dim
         self.feat_dim = self.feature.final_feat_dim
         self.change_way = change_way  # some methods allow different_way classification during training and test
 

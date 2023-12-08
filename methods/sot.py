@@ -29,11 +29,12 @@ class SelfOptimalTransport(MetaTemplate):
 
     
 class Sot(nn.Module):
-    def __init__(self, lambda_=0.1, n_iter=10):
+    def __init__(self, final_feat_dim, lambda_=0.1, n_iter=10):
         super().__init__()
         self.lambda_ = lambda_
         self.n_iter = n_iter
         self.alpha_ = 1e9
+        self.final_feat_dim = final_feat_dim
 
     def forward(self, x):
         # Normalize x
