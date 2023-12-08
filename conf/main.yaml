@@ -9,6 +9,8 @@ n_query: ???
 
 mode: train
 sot: false
+lambda_: 10
+n_iters: 10
 
 exp:
   name: ???
