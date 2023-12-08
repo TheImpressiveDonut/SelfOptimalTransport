@@ -52,7 +52,7 @@ def initialize_dataset_model(cfg):
         print(train_batch_size, val_batch_size)
         assert train_batch_size == val_batch_size
 
-        sot = Sot(final_feat_dim=train_batch_size)
+        sot = Sot(final_feat_dim=train_batch_size, lambda_=0.01, n_iter=1000)
 
     # Instantiate few-shot method class
     model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
