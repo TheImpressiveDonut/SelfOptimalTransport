@@ -42,12 +42,12 @@ def initialize_dataset_model(cfg):
         if cfg.method.type == "baseline":
             train_batch_size = cfg.method.train_batch
         else:
-            train_batch_size = cfg.cls.n_support + cfg.cls.n_query
+            train_batch_size = cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query
 
         if cfg.method.eval_type == 'simple':
             val_batch_size = cfg.method.val_batch
         else:
-            val_batch_size = cfg.cls.n_support + cfg.cls.n_query
+            val_batch_size = cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query
 
         assert train_batch_size == val_batch_size
 
