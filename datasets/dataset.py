@@ -28,7 +28,6 @@ class FewShotDataset(Dataset):
             raise ValueError(
                 f'{self._data_dir} does not exist yet. Please generate/download the dataset first.')
 
-
     @abstractmethod
     def __getitem__(self, i):
         return NotImplemented

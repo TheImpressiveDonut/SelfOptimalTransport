@@ -24,17 +24,16 @@ class ProtoNet(MetaTemplate):
         scores = -dists
         return scores
 
-
     def set_forward_loss(self, x):
-        y_query = torch.from_numpy(np.repeat(range( self.n_way ), self.n_query ))
+        y_query = torch.from_numpy(np.repeat(range(self.n_way), self.n_query))
         y_query = Variable(y_query.cuda())
 
         scores = self.set_forward(x)
 
-        return self.loss_fn(scores, y_query )
+        return self.loss_fn(scores, y_query)
 
 
-def euclidean_dist( x, y):
+def euclidean_dist(x, y):
     # x: N x D
     # y: M x D
     n = x.size(0)

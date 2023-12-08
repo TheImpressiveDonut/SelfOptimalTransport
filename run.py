@@ -1,11 +1,13 @@
+from math import ceil
+
 import hydra
 import wandb
 from hydra.utils import instantiate
-from math import ceil
 from omegaconf import OmegaConf
 from prettytable import PrettyTable
 
 from datasets.cell.tabula_muris import *
+from methods.sot import Sot
 from utils.io_utils import get_resume_file, hydra_setup, fix_seed, model_to_dict, opt_to_dict, get_model_file
 
 
@@ -33,8 +35,15 @@ def initialize_dataset_model(cfg):
     else:
         backbone = instantiate(cfg.backbone, x_dim=train_dataset.dim)
 
+    # Instantiate sot if necessary
+    sot = None
+    if cfg.sot:
+        # final dim of the Sot layer is the batch size
+        batch_size =
+        sot = Sot(final_feat_dim=batch_size)
+
     # Instantiate few-shot method class
-    model = instantiate(cfg.method.cls, backbone=backbone)
+    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
 
     if torch.cuda.is_available():
         model = model.cuda()
@@ -47,6 +56,9 @@ def initialize_dataset_model(cfg):
 
 @hydra.main(version_base=None, config_path='conf', config_name='main')
 def run(cfg):
+    if cfg.method.name == "baseline" and cfg.dataset.name == "swissprot":
+        cfg.train_classes = 7195  # tweak for baseline so that it can run correctly
+
     print(OmegaConf.to_yaml(cfg, resolve=True))
 
     if "name" not in cfg.exp:
@@ -54,9 +66,6 @@ def run(cfg):
 
     if cfg.mode not in ["train", "test"]:
         raise ValueError(f"Unknown mode: {cfg.mode}")
-
-    if cfg.method.name == "baseline" and cfg.dataset.name == "swissprot":
-        cfg.dataset.train_classes = 7195 # tweak for baseline so that it can run correctly
 
     fix_seed(cfg.exp.seed)
 

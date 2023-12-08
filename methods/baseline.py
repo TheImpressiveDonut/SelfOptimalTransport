@@ -65,7 +65,7 @@ class Baseline(MetaTemplate):
 
             # if self.change_way:
             #     self.n_way = self.n_classes
-            
+
             loss.backward()
             optimizer.step()
 

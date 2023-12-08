@@ -80,6 +80,7 @@ def opt_to_dict(opt):
     opt_dict.pop('params')
     return opt_dict
 
+
 def hydra_setup():
     os.environ["HYDRA_FULL_ERROR"] = "1"
     try:

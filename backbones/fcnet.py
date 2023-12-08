@@ -3,6 +3,7 @@ from torch import nn as nn
 
 from backbones.blocks import full_block, full_block_fw
 
+
 class FCNet(nn.Module):
     fast_weight = False  # Default
 

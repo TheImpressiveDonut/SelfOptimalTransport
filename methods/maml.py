@@ -45,16 +45,19 @@ class MAML(MetaTemplate):
                 x = [obj.cuda() for obj in x]
             x_var = [Variable(obj) for obj in x]
             x_a_i = [x_var[i][:, :self.n_support, :].contiguous().view(self.n_way * self.n_support,
-                                                                *x[i].size()[2:]) for i in range(len(x))] #support set
-            x_b_i = [x_var[i][:, self.n_support:, :].contiguous().view(self.n_way * self.n_query, *x[i].size()[2:]) for i in range(len(x))]  # query data
+                                                                       *x[i].size()[2:]) for i in
+                     range(len(x))]  # support set
+            x_b_i = [x_var[i][:, self.n_support:, :].contiguous().view(self.n_way * self.n_query, *x[i].size()[2:]) for
+                     i in range(len(x))]  # query data
 
         else:
             if torch.cuda.is_available():
                 x = x.cuda()
             x_var = Variable(x)
             x_a_i = x_var[:, :self.n_support, :].contiguous().view(self.n_way * self.n_support,
-                                                                *x.size()[2:])  # support data
-            x_b_i = x_var[:, self.n_support:, :].contiguous().view(self.n_way * self.n_query, *x.size()[2:])  # query data
+                                                                   *x.size()[2:])  # support data
+            x_b_i = x_var[:, self.n_support:, :].contiguous().view(self.n_way * self.n_query,
+                                                                   *x.size()[2:])  # query data
 
         if y is None:  # Classification task, assign labels (class indices) based on n_way
             y_a_i = Variable(torch.from_numpy(np.repeat(range(self.n_way), self.n_support)))  # label for support data
@@ -72,7 +75,8 @@ class MAML(MetaTemplate):
         for task_step in range(self.task_update_num):
             scores = self.forward(x_a_i)
             set_loss = self.loss_fn(scores, y_a_i)
-            grad = torch.autograd.grad(set_loss, fast_parameters, create_graph=True)  # build full graph support gradient of gradient
+            grad = torch.autograd.grad(set_loss, fast_parameters,
+                                       create_graph=True)  # build full graph support gradient of gradient
             if self.approx:
                 # Verify implementation of MAML approx -- currently not good results on TM
                 grad = [g.detach() for g in

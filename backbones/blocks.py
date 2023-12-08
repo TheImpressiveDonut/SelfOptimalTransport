@@ -7,8 +7,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.nn.utils.weight_norm import WeightNorm
 
-from torch_geometric.utils import remove_self_loops, add_self_loops, softmax, add_remaining_self_loops
-from torch_geometric.nn.conv import MessagePassing
+
 # Basic ResNet model
 
 def init_layer(L):
@@ -95,6 +94,7 @@ class Conv1d_fw(nn.Conv1d):  # used in MAML to forward input with fast weight
 
         return out
 
+
 class Conv2d_fw(nn.Conv2d):  # used in MAML to forward input with fast weight
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, bias=True):
         super(Conv2d_fw, self).__init__(in_channels, out_channels, kernel_size, stride=stride, padding=padding,
@@ -152,13 +152,14 @@ class BatchNorm1d_fw(nn.BatchNorm1d):  # used in MAML to forward input with fast
         else:
             out = F.batch_norm(x, running_mean, running_var, self.weight, self.bias, training=True, momentum=1)
         return out
-    
+
+
 class LayerNorm_fw(nn.LayerNorm):  # layer norm MAML attempt
     def __init__(self, num_features, elementwise_affine=True):
         super(LayerNorm_fw, self).__init__(num_features)
         self.weight.fast = None
         self.bias.fast = None
-        self.elementwise_affine=elementwise_affine
+        self.elementwise_affine = elementwise_affine
         if self.elementwise_affine:
             self.weight = nn.Parameter(torch.Tensor(num_features), requires_grad=True)
             self.bias = nn.Parameter(torch.Tensor(num_features))
@@ -174,7 +175,7 @@ class LayerNorm_fw(nn.LayerNorm):  # layer norm MAML attempt
         if self.elementwise_affine:
             self.weight.data.fill_(1)
             self.bias.data.zero_()
-                  
+
     def forward(self, x):
 
         if self.weight.fast is not None and self.bias.fast is not None:
@@ -345,9 +346,12 @@ def glorot(tensor):
         stdv = math.sqrt(6.0 / (tensor.size(-2) + tensor.size(-1)))
         tensor.data.uniform_(-stdv, stdv)
 
+
 def zeros(tensor):
     if tensor is not None:
         tensor.data.fill_(0)
+
+
 def full_block_fw(in_features, out_features, dropout):
     return nn.Sequential(
         Linear_fw(in_features, out_features),
