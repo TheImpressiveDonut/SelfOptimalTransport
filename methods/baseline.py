@@ -35,7 +35,7 @@ class Baseline(MetaTemplate):
             self.device = torch.device("cpu")
 
     def forward(self, x):
-        print(f'X forward: {x.size()}')
+        #print(f'X forward: {x.size()}')
 
         if isinstance(x, list):
             x = [Variable(obj.cuda()) for obj in x]
