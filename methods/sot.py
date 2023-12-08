@@ -23,7 +23,7 @@ class Sot(nn.Module):
         # Compute Sinkhorn
         sum_row_constraint = torch.ones(D.size(0), device=D.device)
         sum_col_constraint = torch.ones(D.size(0), device=D.device)
-        W = torch.exp(ot.bregman.sinkhorn_log(sum_row_constraint, sum_col_constraint, D, 1 / self.lambda_, numItermax=self.n_iter))
+        W = ot.bregman.sinkhorn(sum_row_constraint, sum_col_constraint, D, 1 / self.lambda_, numItermax=self.n_iter)
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
         W.fill_diagonal_(1)
         return W
