@@ -57,7 +57,8 @@ class TMSimpleDataset(TMDataset):
         return self.samples.shape[1]
 
     def get_data_loader(self) -> DataLoader:
-        data_loader_params = dict(batch_size=self.batch_size, shuffle=True, num_workers=2, pin_memory=True)
+        data_loader_params = dict(batch_size=self.batch_size, shuffle=True, num_workers=2, pin_memory=True,
+                                  drop_last=True)
         data_loader = torch.utils.data.DataLoader(self, **data_loader_params)
 
         return data_loader
