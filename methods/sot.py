@@ -4,7 +4,7 @@ import torch.nn as nn
 
 
 class Sot(nn.Module):
-    def __init__(self, final_feat_dim, lambda_: float = 0.1, n_iter: int = 10) -> None:
+    def __init__(self, final_feat_dim, lambda_: float = 0.1, n_iter: int = 20) -> None:
         super().__init__()
         self.lambda_ = lambda_
         self.n_iter = n_iter
@@ -23,7 +23,7 @@ class Sot(nn.Module):
         # Compute Sinkhorn
         sum_row_constraint = torch.ones(D.size(0), device=D.device)
         sum_col_constraint = torch.ones(D.size(0), device=D.device)
-        W = ot.sinkhorn(sum_row_constraint, sum_col_constraint, D, 1 / self.lambda_, numItermax=self.n_iter)
+        W = torch.exp(ot.bregman.sinkhorn_log(sum_row_constraint, sum_col_constraint, D, 1 / self.lambda_, numItermax=self.n_iter))
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
         W.fill_diagonal_(1)
         return W
