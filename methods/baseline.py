@@ -128,6 +128,8 @@ class Baseline(MetaTemplate):
             y_support = y_support.contiguous().view(self.n_way * self.n_support, -1).to(self.device)
             # y_support = y_support.contiguous().view(self.n_way * y.size(1), -1)
 
+        print(f'feat_dime: {self.feat_dim}')
+
         if self.loss_type == 'softmax':
             linear_clf = nn.Linear(self.feat_dim, self.n_way)
         elif self.loss_type == 'dist':
