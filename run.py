@@ -55,6 +55,9 @@ def run(cfg):
     if cfg.mode not in ["train", "test"]:
         raise ValueError(f"Unknown mode: {cfg.mode}")
 
+    if cfg.method.name == "baseline" and cfg.dataset.name == "swissprot":
+        cfg.dataset.train_classes = 7195 # tweak for baseline so that it can run correctly
+
     fix_seed(cfg.exp.seed)
 
     train_loader, val_loader, model = initialize_dataset_model(cfg)
