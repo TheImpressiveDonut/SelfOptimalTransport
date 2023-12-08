@@ -13,5 +13,5 @@ cls:
   loss: softmax
 
 stop_epoch: 40
-train_batch: 16
+train_batch: 20
 
