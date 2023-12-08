@@ -21,8 +21,8 @@ class Sot(nn.Module):
         # Set alpha_ in diagonal to act as infinite cost
         D.fill_diagonal_(self.alpha_)
         # Compute Sinkhorn
-        sum_row_constraint = torch.ones_like(D)  # @todo check if need vector or matrix
-        sum_col_constraint = torch.ones_like(D)
+        sum_row_constraint = torch.ones(D.size(0), device=D.device)
+        sum_col_constraint = torch.ones(D.size(0), device=D.device)
         print(f'D size: {D.size()}')
         print(f'R_constraint: {sum_row_constraint.size()}')
         W = ot.sinkhorn(sum_row_constraint, sum_col_constraint, D, 1 / self.lambda_, numItermax=self.n_iter)
