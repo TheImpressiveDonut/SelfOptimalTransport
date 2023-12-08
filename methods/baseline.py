@@ -43,7 +43,6 @@ class Baseline(MetaTemplate):
             x = Variable(x.cuda())
 
         out = self.feature.forward(x)
-        print(out)
         if self.classifier != None:
             scores = self.classifier.forward(out)
         return scores
