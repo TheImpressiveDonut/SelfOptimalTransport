@@ -17,7 +17,6 @@ class Baseline(MetaTemplate):
         self.n_classes = n_classes
 
         if loss == 'softmax':
-            print(f'final dim: {self.feature.final_feat_dim}')
             self.classifier = nn.Linear(self.feature.final_feat_dim, n_classes)
             self.classifier.bias.data.fill_(0)
         elif loss == 'dist':  # Baseline ++
@@ -43,8 +42,6 @@ class Baseline(MetaTemplate):
 
         out = self.feature.forward(x)
         if self.classifier != None:
-            print(f'out: {out.size()}')
-            print(f'classifier: {self.classifier.weight.size()}')
             scores = self.classifier.forward(out)
         return scores
 
