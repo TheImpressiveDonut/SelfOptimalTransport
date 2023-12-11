@@ -21,8 +21,6 @@
   would serve as reference point for the label assignments (fixing the label permutation).
 * Give visualizations of W as it has a probabilistic interpretation.
 
-script & => pid
-disown pid
 
 batch size is train_batch || n_support + n_query
 

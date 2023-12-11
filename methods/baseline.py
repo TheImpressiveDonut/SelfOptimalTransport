@@ -17,6 +17,7 @@ class Baseline(MetaTemplate):
         self.n_classes = n_classes
 
         if loss == 'softmax':
+            print(f'final dim: {self.feature.final_feat_dim}')
             self.classifier = nn.Linear(self.feature.final_feat_dim, n_classes)
             self.classifier.bias.data.fill_(0)
         elif loss == 'dist':  # Baseline ++
@@ -35,8 +36,6 @@ class Baseline(MetaTemplate):
             self.device = torch.device("cpu")
 
     def forward(self, x):
-        #print(f'X forward: {x.size()}')
-
         if isinstance(x, list):
             x = [Variable(obj.cuda()) for obj in x]
         else:
