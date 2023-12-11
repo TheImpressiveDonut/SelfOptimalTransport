@@ -43,6 +43,8 @@ class Baseline(MetaTemplate):
 
         out = self.feature.forward(x)
         if self.classifier != None:
+            print(f'out: {out.size()}')
+            print(f'classifier: {self.classifier.weight.size()}')
             scores = self.classifier.forward(out)
         return scores
 
