@@ -53,18 +53,18 @@ def initialize_dataset_model(cfg):
             if cfg.method.name == "maml":
                 val_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_query
             else:
-                val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+                val_batch_size = cfg.dataset.set_cls.n_way * (
+                        cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
-    pretrained = None
-    if cfg.pretrained:
+    # Instantiate few-shot method class
+    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
+
+    if cfg.pretrained.enable:
         print('Using pretrained best backbone model')
-        if cfg.sot:
-            pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_model.tar')
-        else:
-            pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_sot_model.tar')
+        pretrained_file = os.path.join(cfg.checkpoint.dir, cfg.pretrained.time, 'best_model.tar')
         if os.path.isfile(pretrained_file):
             pretrained = torch.load(pretrained_file)['state']
             for k in list(pretrained.keys()).copy():
@@ -72,12 +72,9 @@ def initialize_dataset_model(cfg):
                     pretrained[re.sub(r'feature.(0.)*', '', k)] = pretrained.pop(k)
                 else:
                     del pretrained[k]
+            model.load_pretrained_model(pretrained, cfg.pretrained.freeze)
         else:
             raise NameError(f'No pretrained model found at {pretrained_file}')
-
-    # Instantiate few-shot method class
-    print(type(backbone))
-    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot, pretrained=pretrained, freeze=cfg.freeze)
 
     if torch.cuda.is_available():
         model = model.cuda()
@@ -181,11 +178,6 @@ def train(train_loader, val_loader, model, cfg):
                 max_acc = acc
                 outfile = os.path.join(cp_dir, 'best_model.tar')
                 torch.save({'epoch': epoch, 'state': model.state_dict()}, outfile)
-                if not cfg.sot:
-                    pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_model.tar')
-                else:
-                    pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_sot_model.tar')
-                torch.save({'state': model.state_dict()}, pretrained_file)
 
         if epoch % cfg.exp.save_freq == 0 or epoch == cfg.method.stop_epoch - 1:
             outfile = os.path.join(cp_dir, '{:d}.tar'.format(epoch))
