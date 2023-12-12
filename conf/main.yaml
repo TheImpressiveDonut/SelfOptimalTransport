@@ -12,8 +12,11 @@ mode: train
 sot: false
 lambda_: 10
 n_iters: 10
-pretrained: false
-freeze: false
+
+pretrained:
+  enable: false
+  time: ???
+  freeze: false
 
 exp:
   name: ???
