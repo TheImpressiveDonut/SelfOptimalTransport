@@ -74,6 +74,9 @@ class PaperSOT(object):
 
         z = torch.exp(z_log)
 
+        z_max = z.max().item()
+        z = z / z_max
+
         # set self-values to 1
         return self.mask_diagonal(z, value=1)
 
