@@ -42,7 +42,7 @@ def initialize_dataset_model(cfg):
         # final dim of the Sot layer is the batch size
         if cfg.method.type == "baseline":
             train_batch_size = cfg.method.train_batch
-        elif cfg.method.type == "maml":
+        elif cfg.method.name == "maml":
             train_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_support
         else:
             train_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
@@ -50,13 +50,13 @@ def initialize_dataset_model(cfg):
         if cfg.method.eval_type == 'simple':
             val_batch_size = cfg.method.val_batch
         else:
-            if cfg.method.type == "maml":
+            if cfg.method.name == "maml":
                 val_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_query
             else:
                 val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
-        if cfg.method.type == "maml":
-            assert cfg.dataset.set_cls.n_support == cfg.dataset.set_cls.n_query, "For MAML with Sot, n_support and n_query should be equal!"
+        if cfg.method.name == "maml":
+            assert cfg.dataset.set_cls.n_support == cfg.dataset.set_cls.n_query, "For MAML with Sot, n_support and n_query should be equal! (n_support <=> n_shot)"
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
