@@ -26,9 +26,12 @@ class Sot(nn.Module):
         logW = self.sinkhorn_log(D, self.lambda_, self.n_iter)
         W = logW.exp()
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
-        W[torch.eye(W.size(0)).bool()] = 1
+        W_clone = W.clone()
+        W_clone.fill_diagonal_(1)
+        W = W_clone
         #W.fill_diagonal_(1)
         return W
+
 
     def sinkhorn_log(self, D: Tensor, lambda_: float, num_iters: int) -> Tensor:
         log_k = -D * lambda_
