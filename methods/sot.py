@@ -40,4 +40,4 @@ class Sot(nn.Module):
             log_u = -torch.logsumexp(log_k + log_v.unsqueeze(0), dim=1)
             log_v = -torch.logsumexp(log_u.unsqueeze(-1) + log_k, dim=0)
 
-        return log_u.unsqueeze(-1) + log_k + log_v.unsqueeze(0)
+        return torch.exp(log_u.unsqueeze(-1) + log_k + log_v.unsqueeze(0))
