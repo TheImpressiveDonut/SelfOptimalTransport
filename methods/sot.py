@@ -60,8 +60,9 @@ class PaperSOT(object):
         return 1 - self.cosine_similarity(X)
 
     def mask_diagonal(self, M: torch.Tensor, value: float):
-        M.fill_diagonal_(value)
-        return M
+        M_clone = M.clone()
+        M_clone.fill_diagonal_(value)
+        return M_clone
 
     def call(self, X: torch.Tensor) -> torch.Tensor:
         # get masked cost matrix
