@@ -16,7 +16,6 @@ class MetaTemplate(nn.Module):
         self.n_support = n_support
         self.n_query = -1  # (change depends on input)
         if pretrained is not None:
-            print('loaded')
             backbone.load_state_dict(pretrained)
             if freeze:
                 for param in backbone.parameters():
