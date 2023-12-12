@@ -20,8 +20,7 @@ class Sot(nn.Module):
         # Compute the squared Euclidean pairwise distance matrix, using the cosine similarity matrix
         D = 2 * (1 - S)
         # Set alpha_ in diagonal to act as infinite cost
-        D[torch.eye(D.size(0)).bool()] = self.alpha_
-        #D.fill_diagonal_(self.alpha_)
+        D.fill_diagonal_(self.alpha_)
         # Compute Sinkhorn in log-space
         logW = self.sinkhorn_log(D, self.lambda_, self.n_iter)
         W = logW.exp()
