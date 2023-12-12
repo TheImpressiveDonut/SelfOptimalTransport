@@ -27,7 +27,7 @@ class Sot(nn.Module):
                                         D, 1 / self.lambda_,
                                         numItermax=self.n_iter)  # https://pythonot.github.io/gen_modules/ot.bregman.html#id108
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
-        W_clone = W.clone()  # clone because of gradient, error on inplace operation
+        W_clone = log_W.clone()  # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)
         W = W_clone
         return W
