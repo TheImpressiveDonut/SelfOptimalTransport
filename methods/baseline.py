@@ -10,8 +10,9 @@ from methods.meta_template import MetaTemplate
 
 class Baseline(MetaTemplate):
 
-    def __init__(self, backbone, n_way, n_support, n_classes=1, loss='softmax', type='classification', sot=None):
-        super(Baseline, self).__init__(backbone, n_way, n_support, change_way=True, sot=sot)
+    def __init__(self, backbone, n_way, n_support, n_classes=1, loss='softmax', type='classification', sot=None,
+                 pretrained=False):
+        super(Baseline, self).__init__(backbone, n_way, n_support, change_way=True, sot=sot, pretrained=pretrained)
         # self.feature = backbone
         self.type = type
         self.n_classes = n_classes
@@ -125,7 +126,6 @@ class Baseline(MetaTemplate):
             y_support = y[:, :self.n_support]
             y_support = y_support.contiguous().view(self.n_way * self.n_support, -1).to(self.device)
             # y_support = y_support.contiguous().view(self.n_way * y.size(1), -1)
-
 
         if self.loss_type == 'softmax':
             linear_clf = nn.Linear(self.feat_dim, self.n_way)

@@ -10,7 +10,7 @@ from utils.data_utils import pearson_corr
 
 
 class MetaTemplate(nn.Module):
-    def __init__(self, backbone, n_way, n_support, change_way=True, sot=None):
+    def __init__(self, backbone, n_way, n_support, change_way=True, sot=None, pretrained=False):
         super(MetaTemplate, self).__init__()
         self.n_way = n_way
         self.n_support = n_support

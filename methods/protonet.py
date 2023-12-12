@@ -9,8 +9,8 @@ from methods.meta_template import MetaTemplate
 
 
 class ProtoNet(MetaTemplate):
-    def __init__(self, backbone, n_way, n_support, sot=None):
-        super(ProtoNet, self).__init__(backbone, n_way, n_support, sot=sot)
+    def __init__(self, backbone, n_way, n_support, sot=None, pretrained=False):
+        super(ProtoNet, self).__init__(backbone, n_way, n_support, sot=sot, pretrained=pretrained)
         self.loss_fn = nn.CrossEntropyLoss()
 
     def set_forward(self, x, is_feature=False):

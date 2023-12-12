@@ -10,8 +10,8 @@ from utils.data_utils import one_hot
 
 
 class MatchingNet(MetaTemplate):
-    def __init__(self, backbone, n_way, n_support, sot=None):
-        super(MatchingNet, self).__init__(backbone, n_way, n_support, sot=sot)
+    def __init__(self, backbone, n_way, n_support, sot=None, pretrained=False):
+        super(MatchingNet, self).__init__(backbone, n_way, n_support, sot=sot, pretrained=pretrained)
 
         self.loss_fn = nn.NLLLoss()
 

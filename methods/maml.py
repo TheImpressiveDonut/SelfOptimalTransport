@@ -10,8 +10,9 @@ from methods.meta_template import MetaTemplate
 
 
 class MAML(MetaTemplate):
-    def __init__(self, backbone, n_way, n_support, n_task, task_update_num, inner_lr, approx=False, sot=None):
-        super(MAML, self).__init__(backbone, n_way, n_support, change_way=False, sot=sot)
+    def __init__(self, backbone, n_way, n_support, n_task, task_update_num, inner_lr, approx=False, sot=None,
+                 pretrained=False):
+        super(MAML, self).__init__(backbone, n_way, n_support, change_way=False, sot=sot, pretrained=pretrained)
 
         self.classifier = Linear_fw(self.feat_dim, n_way)
         self.classifier.bias.data.fill_(0)
