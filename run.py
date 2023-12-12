@@ -68,7 +68,8 @@ def initialize_dataset_model(cfg):
 
 @hydra.main(version_base=None, config_path='conf', config_name='main')
 def run(cfg):
-    if cfg.method.name == "baseline" and cfg.dataset.name == "swissprot":
+    if ((cfg.method.name == "baseline" or cfg.method.name == "baseline_pp")
+            and cfg.dataset.name == "swissprot"):
         cfg.train_classes = 7195  # tweak for baseline so that it can run correctly
 
     print(OmegaConf.to_yaml(cfg, resolve=True))
