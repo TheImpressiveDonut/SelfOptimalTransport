@@ -26,7 +26,6 @@ class Sot(nn.Module):
         log_W = ot.bregman.sinkhorn_log(torch.ones(D.size(0), device=D.device), torch.ones(D.size(0), device=D.device),
                                         D, 1 / self.lambda_,
                                         numItermax=self.n_iter)  # https://pythonot.github.io/gen_modules/ot.bregman.html#id108
-        W = log_W.exp()
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
         W_clone = W.clone()  # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)
