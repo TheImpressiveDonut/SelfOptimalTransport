@@ -64,7 +64,7 @@ def initialize_dataset_model(cfg):
         else:
             val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_way + cfg.dataset.set_cls.n_query)
 
-        assert train_batch_size == val_batch_size
+        assert train_batch_size == val_batch_size, "Train and Val batch size should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
     if cfg.pretrained:
