@@ -15,3 +15,5 @@ do
     echo "====================================="
   done
 done
+
+python run.py exp.name=CV_"$method"_"$dataset" method="$method" dataset="$dataset"
