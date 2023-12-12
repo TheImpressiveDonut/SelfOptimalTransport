@@ -64,7 +64,8 @@ def initialize_dataset_model(cfg):
 
     if cfg.pretrained.enable:
         print('Using pretrained best backbone model')
-        pretrained_file = os.path.join(cfg.checkpoint.dir, cfg.pretrained.time, 'best_model.tar')
+        cf_dir = os.path.join(cfg.checkpoint.dir, cfg.pretrained.time)
+        pretrained_file = os.path.join(cf_dir, 'best_model.tar')
         if os.path.isfile(pretrained_file):
             pretrained = torch.load(pretrained_file)['state']
             for k in list(pretrained.keys()).copy():
