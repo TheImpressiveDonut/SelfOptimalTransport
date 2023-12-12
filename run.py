@@ -36,6 +36,10 @@ def initialize_dataset_model(cfg):
     else:
         backbone = instantiate(cfg.backbone, x_dim=train_dataset.dim)
 
+    if cfg.method.name == "maml" and cfg.dataset.set_cls.n_support != cfg.dataset.set_cls.n_query:
+        print("WARNING: For MAML with Sot, n_support and n_query should be equal (n_support <=> n_shot). Since in the config they are not equal, we set n_query = n_support. We also do this when Sot isn't used, to compare apples with apples.")
+        cfg.dataset.set_cls.n_query = cfg.dataset.set_cls.n_support
+
     # Instantiate sot if necessary
     sot = None
     if cfg.sot:
@@ -55,8 +59,6 @@ def initialize_dataset_model(cfg):
             else:
                 val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
-        if cfg.method.name == "maml":
-            assert cfg.dataset.set_cls.n_support == cfg.dataset.set_cls.n_query, "For MAML with Sot, n_support and n_query should be equal! (n_support <=> n_shot)"
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
