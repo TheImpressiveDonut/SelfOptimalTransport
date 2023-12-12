@@ -10,16 +10,12 @@ from utils.data_utils import pearson_corr
 
 
 class MetaTemplate(nn.Module):
-    def __init__(self, backbone, n_way, n_support, change_way=True, sot=None, pretrained=None, freeze=False):
+    def __init__(self, backbone, n_way, n_support, change_way=True, sot=None):
         super(MetaTemplate, self).__init__()
         self.n_way = n_way
         self.n_support = n_support
         self.n_query = -1  # (change depends on input)
-        if pretrained is not None:
-            backbone.load_state_dict(pretrained)
-            if freeze:
-                for param in backbone.parameters():
-                    param.requires_grad = False
+
         if sot is not None:
             self.feature = nn.Sequential(backbone, sot)
             self.feature.final_feat_dim = sot.final_feat_dim
@@ -176,3 +172,19 @@ class MetaTemplate(nn.Module):
 
         scores = linear_clf(z_query)
         return scores
+
+    def load_pretrained_model(self, state_dict, freeze) -> None:
+        if isinstance(self.feature, nn.Sequential):
+            backbone = self.feature[0]
+        else:
+            backbone = self.feature
+
+        print(type(backbone))
+        print(state_dict._metadata)
+        print(type(state_dict._metadata))
+        print(state_dict._metadata.get('', {}))
+        print(getattr(state_dict, '_metadata', None))
+        backbone.load_state_dict(state_dict)
+        if freeze:
+            for param in backbone.parameters():
+                param.requires_grad = False

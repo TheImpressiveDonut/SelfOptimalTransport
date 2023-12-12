@@ -53,12 +53,15 @@ def initialize_dataset_model(cfg):
             if cfg.method.name == "maml":
                 val_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_query
             else:
-                val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+                val_batch_size = cfg.dataset.set_cls.n_way * (
+                        cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
-    pretrained = None
+    # Instantiate few-shot method class
+    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
+
     if cfg.pretrained:
         print('Using pretrained best backbone model')
         if cfg.sot:
@@ -72,12 +75,9 @@ def initialize_dataset_model(cfg):
                     pretrained[re.sub(r'feature.(0.)*', '', k)] = pretrained.pop(k)
                 else:
                     del pretrained[k]
+            model.load_pretrained_model(pretrained, cfg.freeze)
         else:
             raise NameError(f'No pretrained model found at {pretrained_file}')
-
-    # Instantiate few-shot method class
-    print(type(backbone))
-    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot, pretrained=pretrained, freeze=cfg.freeze)
 
     if torch.cuda.is_available():
         model = model.cuda()
