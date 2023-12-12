@@ -1,7 +1,7 @@
 #!/bin/bash
 
 lambdas=(5 10 20)
-n_iters=(10 20 50)
+n_iters=(10 30)
 dataset="tabula_muris"
 
 method="maml"
