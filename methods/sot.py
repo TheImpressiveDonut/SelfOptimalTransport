@@ -22,8 +22,8 @@ class Sot(nn.Module):
         # Set alpha_ in diagonal to act as infinite cost
         D.fill_diagonal_(self.alpha_)
         # Compute Sinkhorn in log-space
-        W = self.sinkhorn_log(D, self.lambda_, self.n_iter)
-        W = torch.exp(W)
+        logW = self.sinkhorn_log(D, self.lambda_, self.n_iter)
+        W = logW.exp()
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
         W.fill_diagonal_(1)
         return W
