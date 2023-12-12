@@ -53,8 +53,7 @@ def initialize_dataset_model(cfg):
             if cfg.method.name == "maml":
                 val_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_query
             else:
-                val_batch_size = cfg.dataset.set_cls.n_way * (
-                        cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+                val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
@@ -96,6 +95,10 @@ def run(cfg):
         print("===>PERSONAL WARNING: For MAML with SOT, n_support and n_query should be equal (n_support <=> n_shot). Since in the config they are not equal, we set n_query = n_support. We also do this when Sot isn't used, to compare apples with apples.")
         cfg.dataset.set_cls.n_query = cfg.dataset.set_cls.n_support
         cfg.n_query = cfg.n_shot
+
+    if cfg.method.name == "baseline":
+        print("===>PERSONAL WARNING: With SOT train_batch and val_batch should be equal. In Baseline method, since we do few-shot learning we set train_batch = val_batch.")
+        cfg.method.train_batch = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
     print(OmegaConf.to_yaml(cfg, resolve=True))
 
