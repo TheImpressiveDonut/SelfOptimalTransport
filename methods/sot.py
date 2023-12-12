@@ -22,7 +22,7 @@ class Sot(nn.Module):
         # Set alpha_ in diagonal to act as infinite cost
         D.fill_diagonal_(self.alpha_)
         # Compute Sinkhorn in log-space
-        # log_W = self.sinkhorn_log(D, self.lambda_, self.n_iter)
+        # W = self.sinkhorn_log(D, self.lambda_, self.n_iter)
         W = ot.bregman.sinkhorn_log(torch.ones(D.size(0), device=D.device), torch.ones(D.size(0), device=D.device),
                                         D, 1 / self.lambda_,
                                         numItermax=self.n_iter)  # https://pythonot.github.io/gen_modules/ot.bregman.html#id108
