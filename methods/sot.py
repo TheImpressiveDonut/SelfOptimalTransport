@@ -23,11 +23,11 @@ class Sot(nn.Module):
         D.fill_diagonal_(self.alpha_)
         # Compute Sinkhorn in log-space
         # log_W = self.sinkhorn_log(D, self.lambda_, self.n_iter)
-        log_W = ot.bregman.sinkhorn_log(torch.ones(D.size(0), device=D.device), torch.ones(D.size(0), device=D.device),
+        W = ot.bregman.sinkhorn_log(torch.ones(D.size(0), device=D.device), torch.ones(D.size(0), device=D.device),
                                         D, 1 / self.lambda_,
                                         numItermax=self.n_iter)  # https://pythonot.github.io/gen_modules/ot.bregman.html#id108
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
-        W_clone = log_W.clone()  # clone because of gradient, error on inplace operation
+        W_clone = W.clone()  # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)
         W = W_clone
         return W
