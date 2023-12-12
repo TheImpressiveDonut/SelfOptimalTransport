@@ -74,7 +74,6 @@ def initialize_dataset_model(cfg):
                     pretrained[re.sub(r'feature.(0.)*', '', k)] = pretrained.pop(k)
                 else:
                     del pretrained[k]
-            assert False
         else:
             raise NameError(f'No pretrained model found at {pretrained_file}')
 
