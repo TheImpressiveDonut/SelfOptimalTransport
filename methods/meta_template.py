@@ -15,10 +15,17 @@ class MetaTemplate(nn.Module):
         self.n_way = n_way
         self.n_support = n_support
         self.n_query = -1  # (change depends on input)
-        self.feature = backbone
+        if pretrained is not None:
+            print('loaded')
+            backbone.load_state_dict(pretrained)
+            if freeze:
+                for param in backbone.parameters():
+                    param.requires_grad = False
         if sot is not None:
             self.feature = nn.Sequential(backbone, sot)
             self.feature.final_feat_dim = sot.final_feat_dim
+        else:
+            self.feature = backbone
         self.feat_dim = self.feature.final_feat_dim
         self.change_way = change_way  # some methods allow different_way classification during training and test
 

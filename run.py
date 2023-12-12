@@ -1,3 +1,4 @@
+import re
 from math import ceil
 
 import hydra
@@ -12,21 +13,6 @@ from utils.io_utils import get_resume_file, hydra_setup, fix_seed, model_to_dict
 
 
 def initialize_dataset_model(cfg):
-    if cfg.pretrained:
-        print('Using pretrained best backbone model')
-        pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_model.tar')
-        if os.path.isfile(pretrained_file):
-            model = torch.load(pretrained_file)['state']
-            print(model.keys())
-
-
-
-            assert False
-        else:
-            raise NameError(f'No pretrained model found at {pretrained_file}')
-
-
-
     # Instantiate train dataset as specified in dataset config under simple_cls or set_cls
     if cfg.method.type == "baseline":
         train_dataset = instantiate(cfg.dataset.simple_cls, batch_size=cfg.method.train_batch, mode='train')
@@ -74,21 +60,23 @@ def initialize_dataset_model(cfg):
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
+    pretrained = None
     if cfg.pretrained:
         print('Using pretrained best backbone model')
         pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_model.tar')
         if os.path.isfile(pretrained_file):
-            model = torch.load(pretrained_file)['state']
-            print(model.keys())
-
-
-
+            pretrained = torch.load(pretrained_file)['state']
+            for k in list(pretrained.keys()).copy():
+                if k.startswith('feature.'):
+                    pretrained[re.sub(r'feature.(0.)*', '', k)] = pretrained.pop(k)
+                else:
+                    del pretrained[k]
             assert False
         else:
             raise NameError(f'No pretrained model found at {pretrained_file}')
 
     # Instantiate few-shot method class
-    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot, freeze=cfg.freeze)
+    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot, pretrained=pretrained, freeze=cfg.freeze)
 
     if torch.cuda.is_available():
         model = model.cuda()
