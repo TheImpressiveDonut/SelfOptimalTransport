@@ -22,13 +22,12 @@ class Sot(nn.Module):
         # Set alpha_ in diagonal to act as infinite cost
         D.fill_diagonal_(self.alpha_)
         # Compute Sinkhorn in log-space
-        logW = self.sinkhorn_log(D, self.lambda_, self.n_iter)
-        W = logW.exp()
+        log_W = self.sinkhorn_log(D, self.lambda_, self.n_iter)
+        W = log_W.exp()
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
-        W_clone = W.clone()
+        W_clone = W.clone() # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)
         W = W_clone
-        #W.fill_diagonal_(1)
         return W
 
 
