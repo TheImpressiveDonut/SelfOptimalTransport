@@ -11,7 +11,6 @@ class Sot(nn.Module):
         self.n_iter = n_iter
         self.alpha_ = 1e5
         self.final_feat_dim = final_feat_dim
-        self.paper_sot = PaperSOT(lambda_, n_iter)
 
     def forward(self, x: Tensor):
         # Normalize x
