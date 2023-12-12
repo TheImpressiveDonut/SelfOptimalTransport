@@ -78,6 +78,7 @@ def initialize_dataset_model(cfg):
             raise NameError(f'No pretrained model found at {pretrained_file}')
 
     # Instantiate few-shot method class
+    print(type(backbone))
     model = instantiate(cfg.method.cls, backbone=backbone, sot=sot, pretrained=pretrained, freeze=cfg.freeze)
 
     if torch.cuda.is_available():
