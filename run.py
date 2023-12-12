@@ -39,6 +39,7 @@ def initialize_dataset_model(cfg):
     if cfg.method.name == "maml" and cfg.dataset.set_cls.n_support != cfg.dataset.set_cls.n_query:
         print("===>PERSONAL WARNING: For MAML with Sot, n_support and n_query should be equal (n_support <=> n_shot). Since in the config they are not equal, we set n_query = n_support. We also do this when Sot isn't used, to compare apples with apples.")
         cfg.dataset.set_cls.n_query = cfg.dataset.set_cls.n_support
+        cfg.n_query = cfg.n_shot
 
     # Instantiate sot if necessary
     sot = None
