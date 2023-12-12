@@ -49,13 +49,20 @@ def initialize_dataset_model(cfg):
         else:
             val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_way + cfg.dataset.set_cls.n_query)
 
-        print(train_batch_size, val_batch_size)
         assert train_batch_size == val_batch_size
-
         sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
 
+    if cfg.pretrained:
+        print('Using pretrained best backbone model')
+        pretrained_file = os.path.join(cfg.checkpoint.dir, 'pretrained_model.tar')
+        if os.path.isfile(pretrained_file):
+            model = torch.load(pretrained_file)['state']
+            print(model)
+        else:
+            raise NameError(f'No pretrained model found at {pretrained_file}')
+
     # Instantiate few-shot method class
-    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
+    model = instantiate(cfg.method.cls, backbone=backbone, sot=sot, freeze=cfg.freeze)
 
     if torch.cuda.is_available():
         model = model.cuda()
@@ -154,6 +161,11 @@ def train(train_loader, val_loader, model, cfg):
                 max_acc = acc
                 outfile = os.path.join(cp_dir, 'best_model.tar')
                 torch.save({'epoch': epoch, 'state': model.state_dict()}, outfile)
+                if not cfg.sot:
+                    print("save best pretrained model...")
+                    max_acc = acc
+                    outfile = os.path.join(cfg.checkpoint.dir, 'pretrained_model.tar')
+                    torch.save({'state': model.state_dict()}, outfile)
 
         if epoch % cfg.exp.save_freq == 0 or epoch == cfg.method.stop_epoch - 1:
             outfile = os.path.join(cp_dir, '{:d}.tar'.format(epoch))
