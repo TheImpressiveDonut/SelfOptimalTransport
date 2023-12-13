@@ -20,4 +20,4 @@ do
   done
 done
 
-python run.py exp.name=CV_"$method"_"$dataset" method="$method" dataset="$dataset"
+python run.py exp.name=CV_"$method"_"$dataset"_final method="$method" dataset="$dataset"
