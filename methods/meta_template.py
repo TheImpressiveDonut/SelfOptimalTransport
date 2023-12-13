@@ -179,11 +179,6 @@ class MetaTemplate(nn.Module):
         else:
             backbone = self.feature
 
-        print(type(backbone))
-        print(state_dict._metadata)
-        print(type(state_dict._metadata))
-        print(state_dict._metadata.get('', {}))
-        print(getattr(state_dict, '_metadata', None))
         backbone.load_state_dict(state_dict)
         if freeze:
             for param in backbone.parameters():
