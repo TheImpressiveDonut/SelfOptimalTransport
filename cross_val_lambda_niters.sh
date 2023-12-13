@@ -21,4 +21,3 @@ do
 done
 
 python run.py exp.name=CV_"$method"_"$dataset"_final method="$method" dataset="$dataset"
-python run.py exp.name=test_shuffle method=matchingnet dataset=tabula_muris
