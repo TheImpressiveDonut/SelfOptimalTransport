@@ -13,7 +13,7 @@ sot: false
 lambda_: 10
 n_iters: 10
 
-n_episode: 200
+n_episode: 100
 
 pretrained:
   enable: false
