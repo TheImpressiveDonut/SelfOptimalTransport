@@ -17,7 +17,7 @@ def initialize_dataset_model(cfg):
     if cfg.method.type == "baseline":
         train_dataset = instantiate(cfg.dataset.simple_cls, batch_size=cfg.method.train_batch, mode='train')
     elif cfg.method.type == "meta":
-        train_dataset = instantiate(cfg.dataset.set_cls, mode='train')
+        train_dataset = instantiate(cfg.dataset.set_cls, n_episode=cfg.n_episode, mode='train')
     else:
         raise ValueError(f"Unknown method type: {cfg.method.type}")
     train_loader = train_dataset.get_data_loader()
@@ -27,7 +27,7 @@ def initialize_dataset_model(cfg):
     if cfg.method.eval_type == 'simple':
         val_dataset = instantiate(cfg.dataset.simple_cls, batch_size=cfg.method.val_batch, mode='val')
     else:
-        val_dataset = instantiate(cfg.dataset.set_cls, mode='val')
+        val_dataset = instantiate(cfg.dataset.set_cls, n_episode=cfg.n_episode, mode='val')
     val_loader = val_dataset.get_data_loader()
 
     # For MAML (and other optimization-based methods), need to instantiate backbone layers with fast weight

@@ -5,11 +5,11 @@ from torch import Tensor
 
 
 class Sot(nn.Module):
-    def __init__(self, final_feat_dim: int, lambda_: float = 0.1, n_iter: int = 20) -> None:
+    def __init__(self, final_feat_dim: int, lambda_: float, n_iter: int) -> None:
         super().__init__()
         self.lambda_ = lambda_
         self.n_iter = n_iter
-        self.alpha_ = 1e5
+        self.alpha_ = 1e9
         self.final_feat_dim = final_feat_dim
 
     def forward(self, x: Tensor):

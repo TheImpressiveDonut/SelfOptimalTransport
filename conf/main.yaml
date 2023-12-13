@@ -13,10 +13,12 @@ sot: false
 lambda_: 10
 n_iters: 10
 
+n_episode: 200
+
 pretrained:
   enable: false
   time: ???
-  freeze: false
+  freeze: true
 
 exp:
   name: ???
