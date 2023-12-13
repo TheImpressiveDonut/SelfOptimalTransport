@@ -68,7 +68,7 @@ class MatchingNet(MetaTemplate):
 
         incr = np.tile(np.arange(self.n_query), self.n_way)
         idxs = labels + incr
-        logprobs = logprobs[idxs, classes]
+        logprobs = logprobs[idxs, :]
         # print(f'logprobs: {logprobs.size()}') 25, 5
 
         return self.loss_fn(logprobs, y_query)
