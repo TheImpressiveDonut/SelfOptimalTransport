@@ -64,6 +64,7 @@ class MatchingNet(MetaTemplate):
         y_query = Variable(y_query.cuda())
 
         logprobs = self.set_forward(x)
+        print(f'logprobs: {logprobs.size()}')
 
         return self.loss_fn(logprobs, y_query)
 
