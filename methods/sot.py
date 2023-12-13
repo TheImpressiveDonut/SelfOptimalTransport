@@ -5,11 +5,12 @@ from torch import Tensor
 
 
 class Sot(nn.Module):
-    def __init__(self, final_feat_dim: int, lambda_: float, n_iter: int) -> None:
+    def __init__(self, final_feat_dim: int, lambda_: float, n_iter: int, feed_forward: bool) -> None:
         super().__init__()
         self.lambda_ = lambda_
         self.n_iter = n_iter
         self.alpha_ = 1e5
+        self.feed_forward = feed_forward
         self.final_feat_dim = final_feat_dim
 
     def forward(self, x: Tensor):
@@ -30,7 +31,11 @@ class Sot(nn.Module):
         W_clone = W.clone()  # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)
         W = W_clone
-        return torch.cat((W, x), dim=1)
+
+        if self.feed_forward:
+            return torch.cat((W, x), dim=1)
+        else:
+            return W
 
     def sinkhorn_log(self, D: Tensor, lambda_: float, num_iters: int) -> Tensor:
         log_k = -D * lambda_

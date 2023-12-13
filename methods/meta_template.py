@@ -18,7 +18,7 @@ class MetaTemplate(nn.Module):
 
         if sot is not None:
             self.feature = nn.Sequential(backbone, sot)
-            self.feature.final_feat_dim = sot.final_feat_dim + self.feature[0].final_feat_dim
+            self.feature.final_feat_dim = sot.final_feat_dim
         else:
             self.feature = backbone
         self.feat_dim = self.feature.final_feat_dim

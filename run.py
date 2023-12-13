@@ -17,7 +17,7 @@ def initialize_dataset_model(cfg):
     if cfg.method.type == "baseline":
         train_dataset = instantiate(cfg.dataset.simple_cls, batch_size=cfg.method.train_batch, mode='train')
     elif cfg.method.type == "meta":
-        train_dataset = instantiate(cfg.dataset.set_cls, n_episode=cfg.n_episode, mode='train')
+        train_dataset = instantiate(cfg.dataset.set_cls, mode='train')
     else:
         raise ValueError(f"Unknown method type: {cfg.method.type}")
     train_loader = train_dataset.get_data_loader()
@@ -27,7 +27,7 @@ def initialize_dataset_model(cfg):
     if cfg.method.eval_type == 'simple':
         val_dataset = instantiate(cfg.dataset.simple_cls, batch_size=cfg.method.val_batch, mode='val')
     else:
-        val_dataset = instantiate(cfg.dataset.set_cls, n_episode=cfg.n_episode, mode='val')
+        val_dataset = instantiate(cfg.dataset.set_cls, mode='val')
     val_loader = val_dataset.get_data_loader()
 
     # For MAML (and other optimization-based methods), need to instantiate backbone layers with fast weight
@@ -38,7 +38,7 @@ def initialize_dataset_model(cfg):
 
     # Instantiate sot if necessary
     sot = None
-    if cfg.sot:
+    if cfg.sot.enable:
         # final dim of the Sot layer is the batch size
         if cfg.method.type == "baseline":
             train_batch_size = cfg.method.train_batch
@@ -53,10 +53,15 @@ def initialize_dataset_model(cfg):
             if cfg.method.name == "maml":
                 val_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_query
             else:
-                val_batch_size = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+                val_batch_size = cfg.dataset.set_cls.n_way * (
+                            cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
-        sot = Sot(final_feat_dim=train_batch_size, lambda_=cfg.lambda_, n_iter=cfg.n_iters)
+        final_feat_dim = train_batch_size
+        if cfg.sot.feed_forward:
+            final_feat_dim += backbone.final_feat_dim
+        sot = Sot(final_feat_dim=final_feat_dim, lambda_=cfg.sot.lambda_, n_iter=cfg.sot.n_iters,
+                  feed_forward=cfg.sot.feed_forward)
 
     # Instantiate few-shot method class
     model = instantiate(cfg.method.cls, backbone=backbone, sot=sot)
@@ -92,13 +97,16 @@ def run(cfg):
         cfg.train_classes = 7195  # tweak for baseline so that it can run correctly
 
     if cfg.method.name == "maml" and cfg.dataset.set_cls.n_support != cfg.dataset.set_cls.n_query:
-        print("===>PERSONAL WARNING: For MAML with SOT, n_support and n_query should be equal (n_support <=> n_shot). Since in the config they are not equal, we set n_query = n_support. We also do this when Sot isn't used, to compare apples with apples.")
+        print(
+            "===>PERSONAL WARNING: For MAML with SOT, n_support and n_query should be equal (n_support <=> n_shot). Since in the config they are not equal, we set n_query = n_support. We also do this when Sot isn't used, to compare apples with apples.")
         cfg.dataset.set_cls.n_query = cfg.dataset.set_cls.n_support
         cfg.n_query = cfg.n_shot
 
     if cfg.method.name == "baseline":
-        print("===>PERSONAL WARNING: With SOT train_batch and val_batch should be equal. In Baseline method, since we do few-shot learning we set train_batch = val_batch.")
-        cfg.method.train_batch = cfg.dataset.set_cls.n_way * (cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+        print(
+            "===>PERSONAL WARNING: With SOT train_batch and val_batch should be equal. In Baseline method, since we do few-shot learning we set train_batch = val_batch.")
+        cfg.method.train_batch = cfg.dataset.set_cls.n_way * (
+                    cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
     print(OmegaConf.to_yaml(cfg, resolve=True))
 

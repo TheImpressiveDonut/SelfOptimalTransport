@@ -9,11 +9,11 @@ n_query: ???
 
 mode: train
 
-sot: false
-lambda_: 10
-n_iters: 10
-
-n_episode: 100
+sot:
+  enable: false
+  lambda_: 10
+  n_iters: 10
+  feed_forward: false
 
 pretrained:
   enable: false

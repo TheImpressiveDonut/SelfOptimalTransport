@@ -14,7 +14,7 @@ do
     do
       echo "Running with lambda $lambda, n_iter $n_iter and lr $lr"
       echo "-------------------------------------"
-      python run.py exp.name=CV_"$method"_"$dataset"_final method="$method" dataset="$dataset" sot=true lambda_="$lambda" n_iters="$n_iter" lr="$lr"
+      python run.py exp.name=CV_"$method"_"$dataset"_final method="$method" dataset="$dataset" sot.enable=true sot.lambda_="$lambda" sot.n_iters="$n_iter" lr="$lr"
       echo "====================================="
     done
   done
