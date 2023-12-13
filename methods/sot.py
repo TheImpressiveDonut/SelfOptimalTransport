@@ -1,4 +1,4 @@
-import ot
+import ot # External library for Optimal-Transport solving: https://pythonot.github.io/
 import torch
 import torch.nn as nn
 from torch import Tensor
