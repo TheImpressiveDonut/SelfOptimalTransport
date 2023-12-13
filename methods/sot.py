@@ -30,7 +30,7 @@ class Sot(nn.Module):
         W_clone = W.clone()  # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)
         W = W_clone
-        return W
+        return torch.cat((W, x), dim=1)
 
     def sinkhorn_log(self, D: Tensor, lambda_: float, num_iters: int) -> Tensor:
         log_k = -D * lambda_
