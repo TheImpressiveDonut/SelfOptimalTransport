@@ -9,7 +9,7 @@ class Sot(nn.Module):
         super().__init__()
         self.lambda_ = lambda_
         self.n_iter = n_iter
-        self.alpha_ = 1e5
+        self.alpha_ = 1e3
         self.final_feat_dim = final_feat_dim
 
     def forward(self, x: Tensor):
