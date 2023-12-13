@@ -76,7 +76,7 @@ class TMSetDataset(TMDataset):
         samples_all, targets_all = self.load_tabular_muris(mode, min_samples)
 
         self.categories = np.unique(targets_all)  # Unique cell labels
-        print(f'num_classes: {self.categories}')
+        print(f'tabula: {len(self.categories)}')
         self.x_dim = samples_all.shape[1]
 
         self.sub_dataloader = []
@@ -87,6 +87,7 @@ class TMSetDataset(TMDataset):
                                       pin_memory=False)
         for cl in self.categories:
             samples = samples_all[targets_all == cl, ...]
+            print(cl, len(samples))
             sub_dataset = FewShotSubDataset(samples, cl)
             self.sub_dataloader.append(torch.utils.data.DataLoader(sub_dataset, **sub_data_loader_params))
 
