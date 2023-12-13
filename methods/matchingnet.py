@@ -58,7 +58,9 @@ class MatchingNet(MetaTemplate):
         return logprobs
 
     def set_forward_loss(self, x):
-        y_query = torch.from_numpy(np.repeat(range(self.n_way), self.n_query))
+        classes = np.arange(self.n_way)
+        np.random.shuffle(classes)
+        y_query = torch.from_numpy(np.repeat(classes, self.n_query))
         y_query = Variable(y_query.cuda())
 
         logprobs = self.set_forward(x)

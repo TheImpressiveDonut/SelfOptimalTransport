@@ -21,3 +21,4 @@ do
 done
 
 python run.py exp.name=CV_"$method"_"$dataset"_final method="$method" dataset="$dataset"
+python run.py exp.name=CV_maml_tabula_muris_final method=maml dataset=tabula_muris
