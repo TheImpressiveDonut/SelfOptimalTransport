@@ -102,7 +102,7 @@ def run(cfg):
         cfg.dataset.set_cls.n_query = cfg.dataset.set_cls.n_support
         cfg.n_query = cfg.n_shot
 
-    if cfg.method.name == "baseline":
+    if cfg.method.name == "baseline" or cfg.method.name == "baseline_pp":
         print(
             "===>PERSONAL WARNING: With SOT train_batch and val_batch should be equal. In Baseline method, since we do few-shot learning we set train_batch = val_batch.")
         cfg.method.train_batch = cfg.dataset.set_cls.n_way * (
