@@ -71,6 +71,7 @@ class SPSetDataset(SPDataset):
         samples_all = self.load_swissprot(mode=mode, min_samples=min_samples)
 
         self.categories = get_ids(samples_all)  # Unique annotations
+        print(f'swiss prot: {self.categories}')
         self.x_dim = PROTDIM
 
         self.sub_dataloader = []

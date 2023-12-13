@@ -74,7 +74,9 @@ class TMSetDataset(TMDataset):
         min_samples = n_support + n_query
 
         samples_all, targets_all = self.load_tabular_muris(mode, min_samples)
+
         self.categories = np.unique(targets_all)  # Unique cell labels
+        print(f'num_classes: {self.categories}')
         self.x_dim = samples_all.shape[1]
 
         self.sub_dataloader = []
