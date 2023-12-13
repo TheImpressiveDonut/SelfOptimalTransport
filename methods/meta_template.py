@@ -17,6 +17,7 @@ class MetaTemplate(nn.Module):
         self.n_query = -1  # (change depends on input)
 
         if sot is not None:
+            # use sot after the feature extractor
             self.feature = nn.Sequential(backbone, sot)
             self.feature.final_feat_dim = sot.final_feat_dim
         else:
@@ -174,16 +175,12 @@ class MetaTemplate(nn.Module):
         return scores
 
     def load_pretrained_model(self, state_dict, freeze) -> None:
+        # loads the backbone aka feature extractor and freeze it if necessary
         if isinstance(self.feature, nn.Sequential):
             backbone = self.feature[0]
         else:
             backbone = self.feature
 
-        print(type(backbone))
-        print(state_dict._metadata)
-        print(type(state_dict._metadata))
-        print(state_dict._metadata.get('', {}))
-        print(getattr(state_dict, '_metadata', None))
         backbone.load_state_dict(state_dict)
         if freeze:
             for param in backbone.parameters():

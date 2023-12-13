@@ -78,6 +78,27 @@ exp.name/method/dataset/model. To choose a run conducted at a different time (i.
 timestamp
 in the form `checkpoint.time={yyyymmdd_hhmmss}.` To choose a model from a specific epoch, use `checkpoint.iter=40`.
 
+### Using SOT layer
+
+To enable the use of the sot in any of the training method, use the following syntax:
+
+```bash
+python run.py exp.name={exp_name} method=maml dataset=tabula_muris sot.enable=True
+```
+
+You can change the hyperparameters with `sot.lambd_={float}`, `sot.n_iters={int}` and `sot.feed_forward={True|False}`.
+
+### Using pretrained feature extractor
+
+To load an already trained model for the feature extractor/backbone, use the following syntax:
+
+```bash
+python run.py exp.name={exp_name} method=maml dataset=tabula_muris pretrained.enable=True pretrained.time={yyyymmdd_hhmmss}
+```
+
+`pretrained.time` is a parameter to use the model, you want to model, it will automatically take the `best_model.tar`. 
+Additionally, you can add `pretrained.freeze={True|False}`, to choose if you want to freeze the feature extractor.
+
 ## Datasets
 
 We provide a set of datasets in `datasets/`. The data itself is not in the GitHub, but will either be automatically

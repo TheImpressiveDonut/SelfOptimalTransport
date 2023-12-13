@@ -9,16 +9,16 @@ n_query: ???
 
 mode: train
 
-sot:
+sot: # SOT module
   enable: false
-  lambda_: 10
+  lambda_: 10 # regularizer
   n_iters: 10
-  feed_forward: false
+  feed_forward: false # enable the value to pass through the sot layer, by concatenation
 
-pretrained:
+pretrained: # Use pretrained feature extractor
   enable: false
-  time: ???
-  freeze: true
+  time: ??? # model to load
+  freeze: true # freeze the layers of the feature extractor
 
 exp:
   name: ???
