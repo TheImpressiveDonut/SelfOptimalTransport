@@ -46,8 +46,8 @@ class MatchingNet(MetaTemplate):
 
     def set_forward(self, x, is_feature=False):
         z_support, z_query = self.parse_feature(x, is_feature)
-        print(f'z_support: {z_support}')
-        print(f'z_query: {z_query}')
+        #print(f'z_support: {z_support}')
+        #print(f'z_query: {z_query}')
         print(f'z_support: {z_support.size()}')
 
         z_support = z_support.contiguous().view(self.n_way * self.n_support, -1)

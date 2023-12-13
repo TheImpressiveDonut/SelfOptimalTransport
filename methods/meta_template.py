@@ -54,6 +54,7 @@ class MetaTemplate(nn.Module):
             else:
                 x = x.contiguous().view(self.n_way * (self.n_support + self.n_query), *x.size()[2:])
 
+            print(f'x: {x.size()}')
             z_all = self.feature.forward(x)
             print(f'z_all: {z_all.size()}')
             z_all = z_all.view(self.n_way, self.n_support + self.n_query, -1)
