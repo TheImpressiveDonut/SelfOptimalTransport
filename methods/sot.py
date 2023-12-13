@@ -1,4 +1,4 @@
-import ot # External library for Optimal-Transport solving: https://pythonot.github.io/
+import ot  # External library for Optimal-Transport solving: https://pythonot.github.io/
 import torch
 import torch.nn as nn
 from torch import Tensor
@@ -22,11 +22,13 @@ class Sot(nn.Module):
         D = 2 * (1 - S)
         # Set alpha_ in diagonal to act as infinite cost
         D.fill_diagonal_(self.alpha_)
+
         # Compute Sinkhorn in log-space
         # W = self.sinkhorn_log(D, self.lambda_, self.n_iter)
         W = ot.bregman.sinkhorn_log(torch.ones(D.size(0), device=D.device), torch.ones(D.size(0), device=D.device),
-                                        D, 1 / self.lambda_,
-                                        numItermax=self.n_iter)  # https://pythonot.github.io/gen_modules/ot.bregman.html#id108
+                                    D, 1 / self.lambda_,
+                                    numItermax=self.n_iter)  # https://pythonot.github.io/gen_modules/ot.bregman.html#id108
+
         # Set 1 in diagonal (prob of similarity between x_i and x_i is 1)
         W_clone = W.clone()  # clone because of gradient, error on inplace operation
         W_clone.fill_diagonal_(1)

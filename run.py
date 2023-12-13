@@ -54,9 +54,12 @@ def initialize_dataset_model(cfg):
                 val_batch_size = cfg.dataset.set_cls.n_way * cfg.dataset.set_cls.n_query
             else:
                 val_batch_size = cfg.dataset.set_cls.n_way * (
-                            cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+                        cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
+        # test loop uses same values as val for batch sizes, so no need for further check
         assert train_batch_size == val_batch_size, "With Sot, Train and Val batch sizes should be equal!"
+
+        # adjust the final dimension of the SOT layer in case of feed forward
         final_feat_dim = train_batch_size
         if cfg.sot.feed_forward:
             final_feat_dim += backbone.final_feat_dim
@@ -72,6 +75,7 @@ def initialize_dataset_model(cfg):
         pretrained_file = os.path.join(cf_dir, 'best_model.tar')
         if os.path.isfile(pretrained_file):
             pretrained = torch.load(pretrained_file)['state']
+            # load pretrained model, but only feature extractor
             for k in list(pretrained.keys()).copy():
                 if k.startswith('feature.'):
                     pretrained[re.sub(r'feature.(0.)*', '', k)] = pretrained.pop(k)
@@ -106,7 +110,7 @@ def run(cfg):
         print(
             "===>PERSONAL WARNING: With SOT train_batch and val_batch should be equal. In Baseline method, since we do few-shot learning we set train_batch = val_batch.")
         cfg.method.train_batch = cfg.dataset.set_cls.n_way * (
-                    cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
+                cfg.dataset.set_cls.n_support + cfg.dataset.set_cls.n_query)
 
     print(OmegaConf.to_yaml(cfg, resolve=True))
 
