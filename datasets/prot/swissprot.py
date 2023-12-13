@@ -71,7 +71,6 @@ class SPSetDataset(SPDataset):
         samples_all = self.load_swissprot(mode=mode, min_samples=min_samples)
 
         self.categories = get_ids(samples_all)  # Unique annotations
-        print(f'swiss prot: {len(self.categories)}')
         self.x_dim = PROTDIM
 
         self.sub_dataloader = []
@@ -82,7 +81,6 @@ class SPSetDataset(SPDataset):
                                       pin_memory=False)
         for annotation in self.categories:
             samples = [sample for sample in samples_all if sample.annot == annotation]
-            print(annotation, len(samples))
             sub_dataset = SubDataset(samples, self.data_dir)
             self.sub_dataloader.append(torch.utils.data.DataLoader(sub_dataset, **sub_data_loader_params))
 
